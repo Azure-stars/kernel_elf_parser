@@ -89,7 +89,7 @@ fn init_stack(args: &[String], envs: &[String], auxv: &mut [AuxvEntry], sp: usiz
     // next things are auxv entries, envp and argv pointers, argc
     // auxv entries is 16 bytes each, aligned to 16 bytes
     // envp and argv pointers, argc is 8 bytes each, aligned to 8 bytes
-    let pointers_count = auxv.len() + envs.len() + args.len() + 3;
+    let pointers_count = envs.len() + args.len() + 3;
     if pointers_count % 2 != 0 {
         stack.push(padding_null.as_bytes(), &mut data);
     }
