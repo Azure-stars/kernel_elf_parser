@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="kernel-elf-parser"><title>kernel_elf_parser - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-0ce1a80b.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="kernel_elf_parser" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (414482f6a 2025-05-13)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../static.files/storage-4e99c027.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-7ef8a74a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../kernel_elf_parser/index.html">kernel_<wbr>elf_<wbr>parser</a><span class="version">0.3.3</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#kernel-elf-parser" title="kernel-elf-parser">kernel-elf-parser</a><ul><li><a href="#examples" title="Examples">Examples</a></li></ul></li></ul><h3><a href="#structs">Crate Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>kernel_elf_parser</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/kernel_elf_parser/lib.rs.html#1-9">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="kernel-elf-parser"><a class="doc-anchor" href="#kernel-elf-parser">§</a>kernel-elf-parser</h2>
+<p><a href="https://crates.io/crates/kernel-elf-parser"><img src="https://img.shields.io/crates/v/kernel-elf-parser" alt="Crates.io" /></a>
+<a href="https://docs.rs/kernel-elf-parser"><img src="https://docs.rs/kernel-elf-parser/badge.svg" alt="Docs.rs" /></a>
+<a href="https://github.com/Azure-stars/kernel-elf-parser/actions/workflows/ci.yml"><img src="https://github.com/Azure-stars/kernel-elf-parser/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a></p>
+<p>A lightweight ELF parser written in Rust, providing assistance for loading applications into the kernel.</p>
+<p>It reads the data of the ELF file, and generates Sections, Relocations, Segments and so on.</p>
+<p>It also generate a layout of the user stack according to the given user parameters and environment variables,which will be
+used for loading a given application into the physical memory of the kernel.</p>
+<h3 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::collections::BTreeMap;
+<span class="kw">use </span>kernel_elf_parser::{AuxvEntry, AuxvType};
+<span class="kw">let </span>args: Vec&lt;String&gt; = <span class="macro">vec!</span>[<span class="string">"arg1"</span>.to_string(), <span class="string">"arg2"</span>.to_string(), <span class="string">"arg3"</span>.to_string()];
+<span class="kw">let </span>envs: Vec&lt;String&gt; = <span class="macro">vec!</span>[<span class="string">"LOG=file"</span>.to_string()];
+<span class="kw">let </span><span class="kw-2">mut </span>auxv: [AuxvEntry; <span class="number">17</span>] = [
+    AuxvEntry::new(AuxvType::PHDR, <span class="number">0x1000</span>),
+    AuxvEntry::new(AuxvType::PHENT, <span class="number">1024</span>),
+    AuxvEntry::new(AuxvType::PHNUM, <span class="number">10</span>),
+    AuxvEntry::new(AuxvType::PAGESZ, <span class="number">0x1000</span>),
+    AuxvEntry::new(AuxvType::BASE, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::FLAGS, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::ENTRY, <span class="number">0x1000</span>),
+    AuxvEntry::new(AuxvType::HWCAP, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::CLKTCK, <span class="number">100</span>),
+    AuxvEntry::new(AuxvType::PLATFORM, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::UID, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::EUID, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::GID, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::EGID, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::RANDOM, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::EXECFN, <span class="number">0</span>),
+    AuxvEntry::new(AuxvType::NULL, <span class="number">0</span>),
+];
+<span class="comment">// The highest address of the user stack.
+</span><span class="kw">let </span>ustack_end = <span class="number">0x4000_0000</span>;
+<span class="kw">let </span>ustack_size = <span class="number">0x1_0000</span>;
+<span class="kw">let </span>ustack_start = ustack_end - ustack_size;
+
+<span class="kw">let </span>stack_data = kernel_elf_parser::app_stack_region(<span class="kw-2">&amp;</span>args, <span class="kw-2">&amp;</span>envs, <span class="kw-2">&amp;mut </span>auxv, ustack_start.into(), ustack_size);
+
+<span class="comment">// args length
+</span><span class="macro">assert_eq!</span>(stack_data[<span class="number">0</span>..<span class="number">8</span>], [<span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);
+</code></pre></div>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.AuxvEntry.html" title="struct kernel_elf_parser::AuxvEntry">Auxv<wbr>Entry</a></dt><dd>Represents an entry in the auxiliary vector.</dd><dt><a class="struct" href="struct.ELFPH.html" title="struct kernel_elf_parser::ELFPH">ELFPH</a></dt><dd>ELF Program Header applied to the kernel</dd><dt><a class="struct" href="struct.ELFParser.html" title="struct kernel_elf_parser::ELFParser">ELFParser</a></dt><dd>A wrapper for the ELF file data with some useful methods.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.AuxvType.html" title="enum kernel_elf_parser::AuxvType">Auxv<wbr>Type</a></dt><dd>Represents the type of an auxiliary vector entry.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.app_stack_region.html" title="fn kernel_elf_parser::app_stack_region">app_<wbr>stack_<wbr>region</a></dt><dd>Generate initial stack frame for user stack</dd></dl></section></div></main></body></html>
