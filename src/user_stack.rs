@@ -95,8 +95,7 @@ fn init_stack(args: &[String], envs: &[String], auxv: &mut [AuxvEntry], sp: usiz
     // Total items = auxv.len() * 2 + (envs.len() + 1) + (args.len() + 1) + 1
     //             = auxv.len() * 2 + envs.len() + args.len() + 3
     // If odd, the stack top will not be aligned to 16 bytes unless we add 8-byte padding
-    let item_8bytes_count = envs.len() + args.len() + 3;
-    if item_8bytes_count % 2 != 0 {
+    if (envs.len() + args.len() + 3) & 1 != 0 {
         stack.push(padding_null.as_bytes(), &mut data);
     }
 
